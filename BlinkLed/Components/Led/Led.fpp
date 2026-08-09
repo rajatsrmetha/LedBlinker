@@ -2,30 +2,24 @@ module BlinkLed {
     @ Component for F Prime FSW framework.
     active component Led {
 
-        # One async command/port is required for active components
-        # This should be overridden by the developers with a useful command/port
-        @ TODO
-        async command TODO opcode 0
+        @ Command to turn on or off the blinking LED
+        async command BLINKING_ON_OFF(
+            onOff: Fw.On 
+        )
+        
+        @ Reports the state we set to blinking.
+        event SetBlinkingState($state: Fw.On) \
+            severity activity high \
+            format "Set blinking state to {}."
 
-        ##############################################################################
-        #### Uncomment the following examples to start customizing your component ####
-        ##############################################################################
-
-        # @ Example async command
-        # async command COMMAND_NAME(param_name: U32)
-
-        # @ Example telemetry counter
-        # telemetry ExampleCounter: U64
-
-        # @ Example event
-        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
-
-        # @ Example port: receiving calls from the rate group
-        # sync input port run: Svc.Sched
-
-        # @ Example parameter
-        # param PARAMETER_NAME: U32
-
+        event BlinkIntervalSet(interval: U32) \
+            severity activity high \
+            format "LED blink interval set to {}"
+        
+        event LedState(onOff: Fw.On) \
+            severity activity low \
+            format "LED is {}"
+        
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
         ###############################################################################

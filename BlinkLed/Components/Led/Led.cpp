@@ -20,7 +20,7 @@ Led ::~Led() {}
 // Handler implementations for commands
 // ----------------------------------------------------------------------
 
-void Led ::TODO_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On onOff) {
     // TODO
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }

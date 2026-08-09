@@ -29,12 +29,12 @@ class Led final : public LedComponentBase {
     // Handler implementations for commands
     // ----------------------------------------------------------------------
 
-    //! Handler implementation for command TODO
+    //! Handler implementation for command BLINKING_ON_OFF
     //!
-    //! TODO
-    void TODO_cmdHandler(FwOpcodeType opCode,  //!< The opcode
-                         U32 cmdSeq            //!< The command sequence number
-                         ) override;
+    //! Command to turn on or off the blinking LED
+    void BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                    U32 cmdSeq,           //!< The command sequence number
+                                    Fw::On onOff) override;
 };
 
 }  // namespace BlinkLed
