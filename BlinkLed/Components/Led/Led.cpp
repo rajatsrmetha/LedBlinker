@@ -25,8 +25,67 @@ void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On on
     this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
     
     this->log_ACTIVITY_HI_SetBlinkingState(onOff);
-    
+    this->tlmWrite_BlinkingState(onOff);
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void Led ::run_handler(FwIndexType portNum, U32 context) {
+    // Read back the parameter value
+    Fw::ParamValid isValid = Fw::ParamValid::INVALID;
+    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+    FW_ASSERT((isValid != Fw::ParamValid::INVALID) && (isValid != Fw::ParamValid::UNINIT),
+              static_cast<FwAssertArgType>(isValid));
+
+    // Only perform actions when set to blinking
+    if (this->m_blinking && (interval != 0)) {
+        // If toggling state
+        if (this->m_toggleCounter == 0) {
+            // Toggle state
+            this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
+            this->m_transitions++;
+            this->tlmWrite_BlinkTransitions(this->m_transitions);
+            
+            // Port may not be connected, so check before sending output
+            if (this->isConnected_gpioSet_OutputPort(0)) {
+                this->gpioSet_out(0, (Fw::On::ON == this->m_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+            }
+
+            this->log_ACTIVITY_LO_LedState(this->m_state);
+        }
+
+        this->m_toggleCounter = (this->m_toggleCounter + 1) % interval;
+    }
+    // We are not blinking
+    else {
+        if (this->m_state == Fw::On::ON) {
+            // Port may not be connected, so check before sending output
+            if (this->isConnected_gpioSet_OutputPort(0)) {
+                this->gpioSet_out(0, Fw::Logic::LOW);
+            }
+
+            this->m_state = Fw::On::OFF;
+            this->log_ACTIVITY_LO_LedState(this->m_state);
+        }
+    }    
+}
+
+void Led ::parameterUpdated(FwPrmIdType id) {
+    Fw::ParamValid isValid = Fw::ParamValid::INVALID;
+    switch (id) {
+        case PARAMID_BLINK_INTERVAL: {
+            // Read back the parameter value
+            const U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+            // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
+            FW_ASSERT(isValid == Fw::ParamValid::VALID, static_cast<FwAssertArgType>(isValid));
+
+            // Emit the blink interval set event
+            this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
+            break;
+        }
+        default:
+            FW_ASSERT(0, static_cast<FwAssertArgType>(id));
+            break;
+    }
 }
 
 }  // namespace BlinkLed

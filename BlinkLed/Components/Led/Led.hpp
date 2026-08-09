@@ -26,6 +26,22 @@ class Led final : public LedComponentBase {
 
   private:
     // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for run
+    //!
+    //! Port receiving calls from the rate group
+    void run_handler(FwIndexType portNum,  //!< The port number
+                     U32 context           //!< The call order
+                     ) override;
+
+    //! Emit parameter updated EVR //!
+    void parameterUpdated(FwPrmIdType id  //!< The parameter ID
+                          ) override;   
+                                                
+  private:
+    // ----------------------------------------------------------------------
     // Handler implementations for commands
     // ----------------------------------------------------------------------
     Fw::On m_state = Fw::On::OFF; //! Keeps track if LED is on or off

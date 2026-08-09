@@ -20,6 +20,21 @@ module BlinkLed {
             severity activity low \
             format "LED is {}"
         
+        @ Telemetry channel to report blinking state.
+        telemetry BlinkingState: Fw.On
+
+        @ Telemetry channel to report state transitions.
+        telemetry BlinkTransitions: U64
+
+        @ Blinking interval in rate group ticks
+        param BLINK_INTERVAL: U32 default 1
+
+        @ Port receiving calls from the rate group
+        async input port run: Svc.Sched
+
+        @ Port sending calls to the GPIO driver
+        output port gpioSet: Drv.GpioWrite
+                
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
         ###############################################################################
