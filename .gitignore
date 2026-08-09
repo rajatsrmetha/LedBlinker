@@ -6,6 +6,8 @@ build-fprime-*
 *-template
 *.template.cpp
 *.template.hpp
+*/coverage/*
+coverage/
 
 # Misc
 /venv/

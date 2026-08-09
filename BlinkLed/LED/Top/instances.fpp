@@ -46,11 +46,12 @@ module BlinkLed {
     stack size Default.STACK_SIZE \
     priority 40
 
-  instance LedCmpInstance: Led base id 0x10005000 \
+  instance LedCmpInstance: Led base id 0x10006000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
     priority 50
     
+  instance gpioDriver: Drv.LinuxGpioDriver base id 0x10015000    
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------

@@ -33,7 +33,7 @@ module BlinkLed {
     instance comDriver
     instance cmdSeq
     instance LedCmpInstance
-    
+    instance gpioDriver    
   # ----------------------------------------------------------------------
   # Pattern graph specifiers
   # ----------------------------------------------------------------------
@@ -128,8 +128,12 @@ module BlinkLed {
       CdhCore.cmdDisp.seqCmdStatus -> cmdSeq.cmdResponseIn
     }
 
+    # Named connection group
     connections LED {
-
+      # Rate Group 1 (1Hz cycle) ouput is connected to led's run input
+      rateGroup1.RateGroupMemberOut[5] -> LedCmpInstance.run
+      # led's gpioSet output is connected to gpioDriver's gpioWrite input
+      led.gpioSet -> gpioDriver.gpioWrite
     }
 
   }
