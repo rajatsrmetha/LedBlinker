@@ -32,7 +32,8 @@ module BlinkLed {
     instance timer
     instance comDriver
     instance cmdSeq
-
+    instance LedCmpInstance
+    
   # ----------------------------------------------------------------------
   # Pattern graph specifiers
   # ----------------------------------------------------------------------

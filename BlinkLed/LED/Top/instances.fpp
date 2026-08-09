@@ -46,6 +46,11 @@ module BlinkLed {
     stack size Default.STACK_SIZE \
     priority 40
 
+  instance LedCmpInstance: Led base id 0x10005000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+    
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------
